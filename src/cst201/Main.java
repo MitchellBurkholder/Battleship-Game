@@ -8,7 +8,9 @@ public class Main {
 		
 		board.printBoard();
 		
-		board.placeBattleships("Destroyer", 2, 3);
+		board.placeBattleships("Destroyer", 8, 1);
+		board.placeBattleships("Submarine", 1, 1, 1);
+		board.placeBattleships("Cruiser", 1, 6, 7);
 		
 		board.printBoard();
 		
