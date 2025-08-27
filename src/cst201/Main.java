@@ -4,15 +4,16 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		var board = new Board();
+		var playerBoard = new Board();
 		
-		board.printBoard();
+		var placer = new ShipPlacer(playerBoard);
 		
-		board.placeBattleships("Destroyer", 8, 1);
-		board.placeBattleships("Submarine", 1, 1, 1);
-		board.placeBattleships("Cruiser", 1, 6, 7);
+		playerBoard.printBoard();
 		
-		board.printBoard();
+		placer.placeBattleships("Destroyer", 8, 1);
+		placer.placeBattleships("Submarine", 1, 1, 1);
+		placer.placeBattleships("Cruiser", 1, 6, 7);
 		
+		playerBoard.printBoard();
 	}
 }

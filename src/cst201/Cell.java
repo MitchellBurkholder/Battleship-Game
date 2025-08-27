@@ -17,10 +17,9 @@ public class Cell {
 		this.col = col;
 	}
 	
-	public boolean occupied() {
+	public boolean isOccupied() {
 		return occupiedByDestroyer || occupiedBySubmarine || occupiedByCruiser;
 	}
-	
 	
 	// Getters and setters
 	public int getRow() {
