@@ -6,6 +6,9 @@ import java.util.Scanner;
 public class GameSession {
 	
 	private int command = -1;
+	// this varibles will help with determining who will win.
+	private int playerScore = 0;
+	private int aiScore = 0;
 	
 	Board playerBoard = new Board();
 	Board computerBoard = new Board();
@@ -159,7 +162,7 @@ public class GameSession {
 			computerBoard.getGrid(rowCord, columnCord).setHit(true);
 			if(computerBoard.getGrid(rowCord, columnCord).isOccupied()){
 				System.out.println("A ship has been hit at " + computerBoard.getGrid(rowCord, columnCord));
-				//add code for board or ship to change a ship's state.
+				playerScore++;
 				playerBoard.printBoard();
 				computerBoard.printBoard();
 				tradingShots();
@@ -170,6 +173,7 @@ public class GameSession {
 		}
 	}
 }
+
 
 
 
