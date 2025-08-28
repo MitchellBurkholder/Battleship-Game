@@ -106,7 +106,7 @@ public class Board {
 		return grid;
 	}
 
-	public Cell[][] getGrid(int row, int col) {
+	public Cell getGrid(int row, int col) {
 		return grid[row][col];
 	}
 

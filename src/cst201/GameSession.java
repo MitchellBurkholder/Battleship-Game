@@ -6,14 +6,15 @@ import java.util.Scanner;
 public class GameSession {
 	
 	private int command = -1;
-	// this varibles will help with determining who will win.
+	
+	// These variables will help with determining who will win.
 	private int playerScore = 0;
 	private int aiScore = 0;
 	
-	Board playerBoard = new Board();
-	Board computerBoard = new Board();
-	AIBattleShip enenmy = new AIBattleShip();
-	ShipPlacer placer = new ShipPlacer(playerBoard);
+	private Board playerBoard = new Board();
+	private Board computerBoard = new Board();
+	private AIBattleShip enenmy = new AIBattleShip();
+	private ShipPlacer placer = new ShipPlacer(playerBoard);
 	
 	private Scanner scanner = new Scanner(System.in);
 	
@@ -94,7 +95,7 @@ public class GameSession {
 	
 		
 		placer.placeBattleships("Destroyer", row, col);
-		playerBoard.printBoard();
+		playerBoard.printBoard(false);
 	}
 
 	private int enterDestroyerCol(int col) {
@@ -163,8 +164,8 @@ public class GameSession {
 			if(computerBoard.getGrid(rowCord, columnCord).isOccupied()){
 				System.out.println("A ship has been hit at " + computerBoard.getGrid(rowCord, columnCord));
 				playerScore++;
-				playerBoard.printBoard();
-				computerBoard.printBoard();
+				playerBoard.printBoard(false);
+				computerBoard.printBoard(true);
 				tradingShots();
 			}else {
 				System.out.println("You've have missed. It is now player's two turn");
