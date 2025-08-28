@@ -141,6 +141,17 @@ public class GameSession {
 	private boolean destroyerWithinBoard(int row, int col) {
 		return row >= 0 && row <= 8 && col >= 0 && col <= 8;
 	}
-	
+	private void tradingShots(){
+		
+		int rowCord = 0;
+		int columnCord = 0;
+		
+		System.out.println("Enter the row you want to hit");
+		rowCord = scanner.nextInt();
+
+		System.out.println("Enter the column you want to hit");
+		columnCord = scanner.nextInt();
+	}
 }
+
 
