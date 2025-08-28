@@ -151,7 +151,10 @@ public class GameSession {
 
 		System.out.println("Enter the column you want to hit");
 		columnCord = scanner.nextInt();
+
+		//creating new method in Board for this
 	}
 }
+
 
 
