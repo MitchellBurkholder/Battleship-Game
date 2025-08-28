@@ -15,7 +15,7 @@ public class AIBattleShip {
 		int xPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
 		int yPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
 		int direction = randNum.nextInt(3 - 1 + 1) + 1;
-		placer.placeBattleships("Destroyer", direction, xPostionDestroyer, yPostionDestroyer);
+		placer.placeBattleships("Destroyer", xPostionDestroyer, yPostionDestroyer);
 		
 		xPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
 		yPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
@@ -39,4 +39,5 @@ public class AIBattleShip {
 		
 	}
 }
+
 
