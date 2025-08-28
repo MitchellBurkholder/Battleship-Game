@@ -71,7 +71,7 @@ public class Board {
 			printCustomCell("C");
 		else if (cell.isNextToShip())
 			printCustomCell("*");
-		else if (cell.isHit())
+		else if (cell.isHit() && !(cell.isOccupied()))
 			printCustomCell("M");
 		else if (cell.isHit && cell.isOccupied())
 			printCustomCell("H");
@@ -97,6 +97,7 @@ public class Board {
 	}
 
 }
+
 
 
 
