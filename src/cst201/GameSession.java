@@ -151,10 +151,26 @@ public class GameSession {
 
 		System.out.println("Enter the column you want to hit");
 		columnCord = scanner.nextInt();
-
-		//creating new method in Board for this
+		
+		if(computerBoard.getGrid(rowCord, columnCord).isHit()){
+			System.out.println("This cell has already been hit, please choose another cell");
+			tradingShots();
+		}else {
+			computerBoard.getGrid(rowCord, columnCord).setHit(true);
+			if(computerBoard.getGrid(rowCord, columnCord).isOccupied()){
+				System.out.println("A ship has been hit at " + computerBoard.getGrid(rowCord, columnCord));
+				//add code for board or ship to change a ship's state.
+				playerBoard.printBoard();
+				computerBoard.printBoard();
+				tradingShots();
+			}else {
+				System.out.println("You've have missed. It is now player's two turn");
+				enenmy.shootTarget();
+			}
+		}
 	}
 }
+
 
 
 
