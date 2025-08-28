@@ -22,7 +22,7 @@ public class Board {
 	
 	
 	
-	public void printBoard() {
+	public void printBoard(boolean isAIBoard) {
 		printColumnNumbers();
 		System.out.println();
 		
@@ -35,7 +35,7 @@ public class Board {
 			System.out.print(" " + row + " ");
 			
 			for (int col = 0; col < SIZE; col++)
-				printUpdatedCell(row, col);
+				printUpdatedCell(row, col, isAIBoard);
 			System.out.println("|");
 		}
 		
@@ -60,8 +60,18 @@ public class Board {
 		}
 	}
 	
-	private void printUpdatedCell(int row, int col) {
+	private void printUpdatedCell(int row, int col, boolean isAIBoard) {
 		var cell = grid[row][col];
+		
+		if(isAIBoard){
+		if (cell.isHit() && !(cell.isOccupied()))
+			printCustomCell("M");
+		else if (cell.isHit() && cell.isOccupied())
+			printCustomCell("H");
+		else 
+			printCustomCell(" ");
+		return;
+		}
 		
 		if (cell.isOccupiedByDestroyer())
 			printCustomCell("D");
@@ -101,6 +111,7 @@ public class Board {
 	}
 
 }
+
 
 
 
