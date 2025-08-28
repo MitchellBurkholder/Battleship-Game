@@ -54,7 +54,7 @@ public class GameSession {
 			
 				case 1:
 					System.out.println("\nPlayer's Board:");
-					playerBoard.printBoard();
+					playerBoard.printBoard(false);
 					playerPlaceShips();
 					break;
 					
@@ -170,6 +170,7 @@ public class GameSession {
 		}
 	}
 }
+
 
 
 
