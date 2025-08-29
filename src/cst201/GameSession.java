@@ -13,7 +13,7 @@ public class GameSession {
 	
 	private Board playerBoard = new Board();
 	private Board computerBoard = new Board();
-	private AIBattleShip enenmy = new AIBattleShip();
+	private AIBattleShip enenmy = new AIBattleShip(computerBoard);
 	private ShipPlacer placer = new ShipPlacer(playerBoard);
 	
 	private Scanner scanner = new Scanner(System.in);
@@ -174,6 +174,7 @@ public class GameSession {
 		}
 	}
 }
+
 
 
 
