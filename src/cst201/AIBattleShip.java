@@ -6,8 +6,8 @@ public class AIBattleShip {
 	
 	private Random randNum = new Random();
 	
-	public AIBattleShip() {
-		chooseShipPlacement();
+	public AIBattleShip(Board aiBoard) {
+		chooseShipPlacement(aiBoard);
 	}
 	private void chooseShipPlacement(Board aiBoard) {
 		
@@ -40,6 +40,7 @@ public class AIBattleShip {
 		
 	}
 }
+
 
 
 
