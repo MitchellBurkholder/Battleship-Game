@@ -5,10 +5,6 @@ public class Board {
 	final int SIZE = 10;
 
 	Cell[][] grid = new Cell[SIZE][SIZE];
-
-	Battleship destroyer = new Battleship("Destroyer", 4);
-	Battleship submarine = new Battleship("Submarine", 3);
-	Battleship cruiser = new Battleship("Cruiser", 3);
 	
 	public Board() {
 		initializeCells();
@@ -20,9 +16,12 @@ public class Board {
 				grid[row][col] = new Cell(row, col);
 	}
 	
-	
-	
 	public void printBoard(boolean isAIBoard) {
+		if (isAIBoard)
+			System.out.println("\nComputer's Board:");
+//		else
+//			System.out.println("\nPlayer's Board:"); // UNCOMMENT WHEN DONE
+		
 		printColumnNumbers();
 		System.out.println();
 		

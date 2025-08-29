@@ -14,6 +14,56 @@ public class ShipPlacer {
 		this.grid = board.getGrid();
 	}
 	
+	public void placeEnemyShips() {
+	
+	var random = new Random();
+	
+	placeDestroyerRandomly(random);
+	placeCruiserRandomly(random);
+	placeSubmarineRandomly(random);
+}
+
+	private void placeSubmarineRandomly(Random random) {
+		var rowS = random.nextInt(8) + 1;
+		var colS = random.nextInt(8) + 1;
+		var subPosition = random.nextInt(2) + 1;
+		
+		while (!validSubmarineCoordinates(rowS, colS)) {
+			rowS = random.nextInt(8) + 1;
+			colS = random.nextInt(8) + 1;
+		}
+		
+		placeBattleships("Submarine", subPosition, rowS, colS);
+	}
+
+	private void placeCruiserRandomly(Random random) {
+		var rowC = random.nextInt(8) + 1;
+		var colC = random.nextInt(8) + 1;
+		var cruiserPosition = random.nextInt(2) + 1;
+		
+		if (cruiserPosition == 1) {
+			while (!validHorizontalCruiserCoordinates(rowC, colC)) {
+				rowC = random.nextInt(10);
+				colC = random.nextInt(8) + 1;
+			}
+			placeBattleships("Cruiser", cruiserPosition, rowC, colC);
+		}
+		else {
+			while (!validVerticalCruiserCoordinates(rowC, colC)) {
+				rowC = random.nextInt(8) + 1;
+				colC = random.nextInt(10);
+			}
+			placeBattleships("Cruiser", cruiserPosition, rowC, colC);
+		}
+	}
+
+	private void placeDestroyerRandomly(Random random) {
+		var rowD = random.nextInt(9);
+		var colD = random.nextInt(9);
+		
+		placeBattleships("Destroyer", rowD, colD);
+	}
+	
 	public void placeBattleships(String name, int row, int col) {
 		
 		switch(name) {
@@ -150,6 +200,8 @@ public class ShipPlacer {
 		return true;
 	}
 	
+	
+	
 	private boolean validSubmarineCoordinates(int row, int col) {
 		for (int i = -1; i <= 1; i++)
 			for (int j = -1; j <= 1; j++)
@@ -180,16 +232,6 @@ public class ShipPlacer {
 			}
 		
 		return true;
-	}
-	
-	private void printOutOfBoundsMessage() {
-		System.out.println("The ship (or part of the ship) cannot be placed outside the board. "
-						 + "Please, enter valid coordinates.");
-	}
-	
-	private void printShipOverlapMessage() {
-		System.out.println("The ship cannot be placed on top or next to anoter ship. "
-						 + "Please, enter valid coordinates.");
 	}
 	
 	public boolean cellIsOnBoard(int row, int col) {

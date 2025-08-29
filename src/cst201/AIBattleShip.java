@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class AIBattleShip {
 
-	final int SIZE = 10;
+	private final int SIZE = 10;
 
-	Cell[][] grid = new Cell[SIZE][SIZE];
+	private Cell[][] grid = new Cell[SIZE][SIZE];
 	private Random randNum = new Random();
 	
 	public AIBattleShip(Board aiBoard) {
@@ -32,7 +32,7 @@ public class AIBattleShip {
 		placer.placeBattleships("Cruiser", direction, xPostionDestroyer, yPostionDestroyer);
 	}
 	
-	public Cell[][] shootTarget() {
+	public Cell shootTarget() {
 
 		return grid[randNum.nextInt(10 - 1 + 1) + 1][randNum.nextInt(10 - 1 + 1) + 1];
 	}

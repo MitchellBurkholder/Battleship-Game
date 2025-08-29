@@ -4,5 +4,5 @@
 /**
  * 
  */
-module BattleshipGame {
+module Battleship {
 }

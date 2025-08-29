@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 public class GameSession {
 	
+	private int row = -1;
+	private int col = -1;
+	private int position = 0;
+	
 	private int command = -1;
 	
 	// These variables will help with determining who will win.
@@ -13,8 +17,12 @@ public class GameSession {
 	
 	private Board playerBoard = new Board();
 	private Board computerBoard = new Board();
-	private AIBattleShip enenmy = new AIBattleShip(computerBoard);
-	private ShipPlacer placer = new ShipPlacer(playerBoard);
+	
+	private Board aiBoard = new Board();
+	private AIBattleShip enemy = new AIBattleShip(aiBoard);
+	
+	private ShipPlacer playerPlacer = new ShipPlacer(playerBoard);
+	private ShipPlacer enemyPlacer = new ShipPlacer(computerBoard);
 	
 	private Scanner scanner = new Scanner(System.in);
 	
@@ -26,8 +34,6 @@ public class GameSession {
 		command = -1;
 		
 		chooseMenuOptions();
-		
-		playerPlaceShips();
 		
 		scanner.close();
 	}
@@ -48,7 +54,7 @@ public class GameSession {
 			try {
 				command = scanner.nextInt();
 			} catch (InputMismatchException e) {
-				System.out.println("\nPlease enter a number.\n");
+				System.out.println("\nPlease, enter a number.\n");
 				System.out.print("Enter command: ");
 				scanner.nextLine();
 				continue;
@@ -57,9 +63,10 @@ public class GameSession {
 			switch(command) {
 			
 				case 1:
-					System.out.println("\nPlayer's Board:");
 					playerBoard.printBoard(false);
-					playerPlaceShips();
+					battleshipSetup();
+					enemyPlacer.placeEnemyShips();
+					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE
 					break;
 					
 				case 0:
@@ -75,30 +82,48 @@ public class GameSession {
 		}	
 	}
 	
-	private void playerPlaceShips() {
+	private void battleshipSetup() {
 		
-		System.out.println("\nPlace Destroyer.\n");
+		playerPlaceShip("Destroyer");
+	}
+	
+	private void playerPlaceShip(String name) {
 		
-		int row = -1;
-		int col = -1;
+		placeShipMessage(name);
 		
 		while (true) {
 			
-			row = enterDestroyerRow(row);
-			col = enterDestroyerCol(col);
+			enterCoordinates();
 			
 			if (destroyerWithinBoard(row, col))
 				break;
 			else
-				System.out.println("The ship (or part of the ship) cannot be outside the board");
+				printOutOfBoundsMessage();
 		}
 	
-		
-		placer.placeBattleships("Destroyer", row, col);
+		playerPlacer.placeBattleships(name, row, col);
 		playerBoard.printBoard(false);
 	}
 
-	private int enterDestroyerCol(int col) {
+	// Overload playerPlaceShip
+	private void playerPlaceShip(String name,
+							     int position) {
+		placeShipMessage(name);
+	}
+	
+	private void enterCoordinates() {
+		row = enterRow(row);
+		col = enterCol(col);
+	}
+
+	
+	private void placeShipMessage(String name) {
+		System.out.println("\nPlace " + name + ".\n");
+	}
+	
+	
+	private int enterCol(int col) {
+		
 		while (true) {
 			
 			System.out.print("\nColumn: ");
@@ -118,7 +143,8 @@ public class GameSession {
 		return col;
 	}
 
-	private int enterDestroyerRow(int row) {
+	private int enterRow(int row) {
+		
 		while (true) {
 			
 			System.out.print("Row: ");
@@ -145,6 +171,24 @@ public class GameSession {
 	private boolean destroyerWithinBoard(int row, int col) {
 		return row >= 0 && row <= 8 && col >= 0 && col <= 8;
 	}
+	
+	private boolean shipWithinBoard(int row,
+									int col,
+									int minRow,
+									int minCol) {
+		return true;
+	}
+	
+	public void printOutOfBoundsMessage() {
+		System.out.println("\nThe ship (or part of the ship) cannot be placed outside the board. "
+						 + "Please, enter valid coordinates.\n");
+	}
+	
+	private void printShipOverlapMessage() {
+		System.out.println("\nThe ship cannot be placed on top or next to anoter ship. "
+						 + "Please, enter valid coordinates.\n");
+	}
+	
 	private void tradingShots(){
 		
 		int rowCord = 0;
@@ -159,7 +203,8 @@ public class GameSession {
 		if(computerBoard.getGrid(rowCord, columnCord).isHit()){
 			System.out.println("This cell has already been hit, please choose another cell");
 			tradingShots();
-		}else {
+		}
+		else {
 			computerBoard.getGrid(rowCord, columnCord).setHit(true);
 			if(computerBoard.getGrid(rowCord, columnCord).isOccupied()){
 				System.out.println("A ship has been hit at " + computerBoard.getGrid(rowCord, columnCord));
@@ -167,9 +212,10 @@ public class GameSession {
 				playerBoard.printBoard(false);
 				computerBoard.printBoard(true);
 				tradingShots();
-			}else {
+			}
+			else {
 				System.out.println("You've have missed. It is now player's two turn");
-				enenmy.shootTarget();
+				enemy.shootTarget();
 			}
 		}
 	}
