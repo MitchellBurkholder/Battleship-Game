@@ -5,8 +5,7 @@ import java.util.Random;
 public class AIBattleShip {
 	
 	private Random randNum = new Random();
-	private ShipPlacer placer = new ShipPlacer(aiBoard);
-
+	
 	public AIBattleShip() {
 		chooseShipPlacement();
 	}
@@ -41,6 +40,7 @@ public class AIBattleShip {
 		
 	}
 }
+
 
 
 
