@@ -5,17 +5,18 @@ import java.util.Random;
 public class AIBattleShip {
 	
 	private Random randNum = new Random();
-	private Board aiBoard = new Board();
 	private ShipPlacer placer = new ShipPlacer(aiBoard);
 
 	public AIBattleShip() {
 		chooseShipPlacement();
 	}
-	private void chooseShipPlacement() {
+	private void chooseShipPlacement(Board aiBoard) {
 		
+		ShipPlacer placer = new ShipPlacer(aiBoard);
 		int xPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
 		int yPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
 		int direction = randNum.nextInt(3 - 1 + 1) + 1;
+		
 		placer.placeBattleships("Destroyer", xPostionDestroyer, yPostionDestroyer);
 		
 		xPostionDestroyer = randNum.nextInt(10 - 1 + 1) + 1;
@@ -40,6 +41,7 @@ public class AIBattleShip {
 		
 	}
 }
+
 
 
 
