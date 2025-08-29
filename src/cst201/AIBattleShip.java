@@ -3,7 +3,10 @@ package cst201;
 import java.util.Random;
 
 public class AIBattleShip {
-	
+
+	final int SIZE = 10;
+
+	Cell[][] grid = new Cell[SIZE][SIZE];
 	private Random randNum = new Random();
 	
 	public AIBattleShip(Board aiBoard) {
@@ -29,17 +32,12 @@ public class AIBattleShip {
 		placer.placeBattleships("Cruiser", direction, xPostionDestroyer, yPostionDestroyer);
 	}
 	
-	public int[] shootTarget() {
-	
-		int[] targetCell = {randNum.nextInt(10 - 1 + 1) + 1, randNum.nextInt(10 - 1 + 1) + 1};
-		return targetCell;
-	}
+	public Cell[][] shootTarget() {
 
-	public void attack(){
-		int[] targetCell = shootTarget();
-		
+		return grid[randNum.nextInt(10 - 1 + 1) + 1][randNum.nextInt(10 - 1 + 1) + 1];
 	}
 }
+
 
 
 
