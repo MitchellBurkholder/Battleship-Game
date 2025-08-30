@@ -32,11 +32,12 @@ public class AIBattleShip {
 		placer.placeBattleships("Cruiser", direction, xPostionDestroyer, yPostionDestroyer);
 	}
 	
-	public Cell shootTarget() {
+	public int shootTarget() {
 
-		return grid[randNum.nextInt(10 - 1 + 1) + 1][randNum.nextInt(10 - 1 + 1) + 1];
+		return randNum.nextInt(10 - 1 + 1) + 1;
 	}
 }
+
 
 
 
