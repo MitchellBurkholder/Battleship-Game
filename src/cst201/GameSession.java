@@ -79,8 +79,6 @@ public class GameSession {
 					enemyPlacer.placeEnemyShips();
 					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE!!!
 					navalCombat();
-					//tradingShots();
-					//inSession = false;
 					break;
 					
 				case 0:
@@ -391,18 +389,13 @@ public class GameSession {
 	}
 
 	private Cell randomShot() {
-//		var random = new Random();
-//		var randRow = random.nextInt(10);
-//		var randCol = random.nextInt(10);
 		
 		var shot = computerShotSet.iterator().next();
 		computerShotSet.remove(shot);
 		
 		var targetCell = playerGrid[shot.getRow()][shot.getCol()];
 		
-//		while(targetCell.isHit()) {
-//			randRow = random.nextInt(10);
-//			randCol = random.nextInt(10);
+
 //		}
 		
 		return targetCell;
@@ -420,46 +413,9 @@ public class GameSession {
 		
 		return computerShotSet;
 	}
-	
-	private void tradingShots(){
-		
-		if(playerScore == 10){
-			System.out.println("Player one has won the game. Game over");
-			return;
-		} else if(aiScore == 10){
-			System.out.println("Computer has won the game. Game over");
-			return;
-		}
-		
-		int rowCord = 0;
-		int columnCord = 0;
-		
-		System.out.println("Enter the row you want to hit");
-		rowCord = scanner.nextInt();
 
-		System.out.println("Enter the column you want to hit");
-		columnCord = scanner.nextInt();
-		
-		if(computerBoard.getGrid(rowCord, columnCord).isHit()){
-			System.out.println("This cell has already been hit, please choose another cell");
-			tradingShots();
-		}
-		else {
-			computerBoard.getGrid(rowCord, columnCord).setHit(true);
-			if(computerBoard.getGrid(rowCord, columnCord).isOccupied()){
-				System.out.println("A ship has been hit at " + computerBoard.getGrid(rowCord, columnCord));
-				playerScore++;
-				playerBoard.printBoard(false);
-				computerBoard.printBoard(true);
-				tradingShots();
-			}
-			else {
-				System.out.println("You have missed. It is now player's two turn");
-				enemy.shootTarget();
-			}
-		}
-	}
 }
+
 
 
 
