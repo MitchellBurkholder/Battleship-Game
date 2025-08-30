@@ -19,8 +19,8 @@ public class Board {
 	public void printBoard(boolean isAIBoard) {
 		if (isAIBoard)
 			System.out.println("\nComputer's Board:");
-//		else
-//			System.out.println("\nPlayer's Board:"); // UNCOMMENT WHEN DONE
+		else
+			System.out.println("\nPlayer's Board:"); 
 		
 		printColumnNumbers();
 		System.out.println();
@@ -82,8 +82,6 @@ public class Board {
 			printCustomCell("S");
 		else if (cell.isOccupiedByCruiser())
 			printCustomCell("C");
-//		else if (cell.isNextToShip()) // DELETE!!!
-//			printCustomCell("*");
 		else 
 			printCustomCell(" ");
 	}
@@ -110,6 +108,7 @@ public class Board {
 	}
 
 }
+
 
 
 
