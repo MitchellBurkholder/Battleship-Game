@@ -1,0 +1,23 @@
+Video Link: 
+Algorithm computerShotOutcome( computerTurn)
+// shots a random cell of the player’s board
+//Input: a boolean value determining whether it is the computer turn to fire 
+//Output: computerTurn 
+
+targetCell ← randomShot()
+targetCell.setHit(true)
+If targetCell.isOccupied() = true them
+aiScore ← aiScore + 1
+playerBoard.printBoard(false)
+Output: Computer has hit one of your ships.\n  + "Computer score is " + aiScore
+If aiScore == WINNING_SCORE then 
+Return false 
+Output: Computer shoots again…
+Thread.sleep(2000)
+Else 
+	playerBoard.printBoard(false)
+	computerBoard.printBoard(true)
+	Output: Computer missed. Your turn.
+	computerTurn ← false 
+Return computerTurn
+	
