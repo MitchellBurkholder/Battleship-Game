@@ -220,11 +220,14 @@ public class GameSession {
 				
 				playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
 				
+				System.out.println("Player two has hit " + playerBoard.getGrid(randRowCord, randRowCord));
+	
 				while(playerBoard.getGrid(randRowCord, randColumnCord).isOccupied()){
 					aiScore++;
 					randRowCord = enemy.shootTarget();
 					randColumnCord = enemy.shootTarget();
 					playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
+					System.out.println("Player two has hit " + playerBoard.getGrid(randRowCord, randRowCord));
 				}
 				
 				tradingShots();
@@ -234,6 +237,7 @@ public class GameSession {
 		}
 	}
 }
+
 
 
 
