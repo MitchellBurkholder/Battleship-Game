@@ -76,7 +76,7 @@ public class GameSession {
 					System.out.println("\nComputer places ships...");
 					Thread.sleep(2000);
 					enemyPlacer.placeEnemyShips();
-					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE!!!
+					computerBoard.printBoard(true); // CHANGE TO TRUE WHEN DONE!!!
 					navalCombat();
 					break;
 					
@@ -312,7 +312,7 @@ public class GameSession {
 			
 			if (computerGrid[row][col].isOccupied()) {
 				playerScore++;
-				computerBoard.printBoard(false); // CHANGE TO TRUE!!!
+				computerBoard.printBoard(true); // CHANGE TO TRUE!!!
 				System.out.println("Your current score is " + playerScore + ".");
 				if (playerScore == WINNING_SCORE) {
 					return;
@@ -380,7 +380,7 @@ public class GameSession {
 		}
 		else {
 			playerBoard.printBoard(false);
-			computerBoard.printBoard(false); // CHANGE TO TRUE!!!
+			computerBoard.printBoard(true); // CHANGE TO TRUE!!!
 			System.out.println("\nComputer missed. Your turn.");
 			computerTurn = false;
 		}
@@ -414,6 +414,7 @@ public class GameSession {
 	}
 
 }
+
 
 
 
