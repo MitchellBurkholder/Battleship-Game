@@ -54,8 +54,8 @@ public class GameSession {
 			try {
 				command = scanner.nextInt();
 			} catch (InputMismatchException e) {
-				System.out.println("\nPlease, enter a number.\n");
-				System.out.print("Enter command: ");
+				System.out.println("\nPlease, enter a number.");
+				System.out.print("\nEnter command: ");
 				scanner.nextLine();
 				continue;
 			}
@@ -66,19 +66,19 @@ public class GameSession {
 					playerBoard.printBoard(false);
 					battleshipSetup();
 					enemyPlacer.placeEnemyShips();
-					computerBoard.printBoard(true); // CHANGE TO TRUE WHEN DONE
+					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE!!!
 					tradingShots();
 					inSession = false;
 					break;
 					
 				case 0:
-					System.out.println("Please, come back again.");
+					System.out.println("\nPlease, come back again.");
 					inSession = false;
 					break;
 					
 				default:
 					System.out.println("\nPlease, enter valid command.\n");
-					System.out.print("Enter command: ");
+					System.out.print("\nEnter command: ");
 					break;
 			}
 		}	
@@ -86,31 +86,115 @@ public class GameSession {
 	
 	private void battleshipSetup() {
 		
-		playerPlaceShip("Destroyer");
+		playerPlaceDestroyer();
+		playerBoard.printBoard(false);
+		playerPlaceSubmarine();
+		playerBoard.printBoard(false);
+		playerPlaceCruiser();
+		playerBoard.printBoard(false);
 	}
 	
-	private void playerPlaceShip(String name) {
+	private void playerPlaceDestroyer() {
 		
-		placeShipMessage(name);
+		placeShipMessage("destroyer");
 		
 		while (true) {
 			
 			enterCoordinates();
 			
-			if (destroyerWithinBoard(row, col))
+			if (playerPlacer.validDestroyerCoordinates(row, col))
 				break;
 			else
-				printOutOfBoundsMessage();
+				printErrorMessage();
 		}
 	
-		playerPlacer.placeBattleships(name, row, col);
-		playerBoard.printBoard(false);
+		playerPlacer.placeBattleships("Destroyer", row, col);
 	}
 
-	// Overload playerPlaceShip
-	private void playerPlaceShip(String name,
-							     int position) {
-		placeShipMessage(name);
+	private void playerPlaceSubmarine() {
+		
+		boolean placingShip = true;
+		placeShipMessage("submarine");
+		
+		while (placingShip) {
+			
+			printSubPositionOptions();
+			position = enterPosition();
+			enterCoordinates();
+			
+			switch(position) {
+				case 1:
+					if (playerPlacer.validLeftSubmarineCoordinates(row, col))
+						placingShip = false;
+					else
+						printErrorMessage();
+					break;
+					
+				case 2:
+					if (playerPlacer.validRightSubmarineCoordinates(row, col))
+						placingShip = false;
+					else
+						printErrorMessage();
+					break;
+			}		
+		}
+		
+		playerPlacer.placeBattleships("Submarine", position, row, col);
+	}
+	
+	private void playerPlaceCruiser() {
+		
+		boolean placingShip = true;
+		
+		placeShipMessage("cruiser");
+		
+		while (placingShip) {
+			
+			printCruiserPositionOptions();
+			position = enterPosition();
+			enterCoordinates();
+			
+			switch(position) {
+			
+				case 1:
+					if (playerPlacer.validHorizontalCruiserCoordinates(row, col))
+						placingShip = false;
+					else
+						printErrorMessage();
+					break;
+					
+				case 2:
+					if (playerPlacer.validVerticalCruiserCoordinates(row, col))
+						placingShip = false;
+					else
+						printErrorMessage();
+					break;
+			}
+		}
+		
+		playerPlacer.placeBattleships("Cruiser", position, row, col);
+	}
+	
+	private int enterPosition() {
+		
+		while (true) {
+			
+			System.out.print("\nChoose position: ");
+			
+			try {
+				position = scanner.nextInt();
+				if (position == 1 || position == 2)
+					break;
+				else
+					System.out.println("\nEnter valid position.");
+			
+			} catch (InputMismatchException e) {
+				System.out.println("\nEnter a number.");
+				scanner.nextLine();
+			}
+		}
+		
+		return position;
 	}
 	
 	private void enterCoordinates() {
@@ -120,7 +204,7 @@ public class GameSession {
 
 	
 	private void placeShipMessage(String name) {
-		System.out.println("\nPlace " + name + ".\n");
+		System.out.println("\nPlace " + name);
 	}
 	
 	
@@ -135,7 +219,7 @@ public class GameSession {
 				if (validNum(col))
 					break;
 				else
-					System.out.println("Column must be between 0 and 9\n");
+					System.out.println("\nColumn must be between 0 and 9");
 			
 			} catch (InputMismatchException e) {
 				System.out.println("Enter a number.\n");
@@ -149,17 +233,17 @@ public class GameSession {
 		
 		while (true) {
 			
-			System.out.print("Row: ");
+			System.out.print("\nRow: ");
 			
 			try {
 				row = scanner.nextInt();
 				if (validNum(row))
 					break;
 				else 
-					System.out.println("Row must be between 0 and 9\n");
+					System.out.println("\nRow must be between 0 and 9");
 				
 			} catch (InputMismatchException e) {
-				System.out.println("Enter a number.\n");
+				System.out.println("\nEnter a number.");
 				scanner.nextLine();
 			}
 		}
@@ -170,25 +254,21 @@ public class GameSession {
 		return num >= 0 && num <= 9;
 	}
 	
-	private boolean destroyerWithinBoard(int row, int col) {
-		return row >= 0 && row <= 8 && col >= 0 && col <= 8;
+	
+	public void printErrorMessage() {
+		System.out.println("\nThe ship must be fully on board "
+						 + "and cannot be next to another ship. "
+						 + "Please, enter valid coordinates.");
 	}
 	
-	private boolean shipWithinBoard(int row,
-									int col,
-									int minRow,
-									int minCol) {
-		return true;
+	private void printSubPositionOptions() {
+		System.out.println("\n1 - Place submarine diagonally left.\n"
+						 + "2 - Place submarine diagonally right.");
 	}
 	
-	public void printOutOfBoundsMessage() {
-		System.out.println("\nThe ship (or part of the ship) cannot be placed outside the board. "
-						 + "Please, enter valid coordinates.\n");
-	}
-	
-	private void printShipOverlapMessage() {
-		System.out.println("\nThe ship cannot be placed on top or next to anoter ship. "
-						 + "Please, enter valid coordinates.\n");
+	private void printCruiserPositionOptions() {
+		System.out.println("\n1 - Place cruiser horizontally.\n"
+						 + "2 - Place cruiser vertically.");
 	}
 	
 	private void tradingShots(){
@@ -203,8 +283,6 @@ public class GameSession {
 		
 		int rowCord = 0;
 		int columnCord = 0;
-		int randRowCord = enemy.shootTarget();
-		int randColumnCord = enemy.shootTarget();
 		
 		System.out.println("Enter the row you want to hit");
 		rowCord = scanner.nextInt();
@@ -226,30 +304,12 @@ public class GameSession {
 				tradingShots();
 			}
 			else {
-				System.out.println("You've have missed. It is now player's two turn");
-				
-				playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
-				
-				System.out.println("Player two has hit " + playerBoard.getGrid(randRowCord, randRowCord));
-	
-				while(playerBoard.getGrid(randRowCord, randColumnCord).isOccupied()){
-					aiScore++;
-					randRowCord = enemy.shootTarget();
-					randColumnCord = enemy.shootTarget();
-					playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
-					System.out.println("Player two has hit " + playerBoard.getGrid(randRowCord, randRowCord));
-				}
-				
-				tradingShots();
-			}
-				
+				System.out.println("You have missed. It is now player's two turn");
+				enemy.shootTarget();
 			}
 		}
 	}
 }
-
-
-
 
 
 

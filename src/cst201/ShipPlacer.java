@@ -16,19 +16,36 @@ public class ShipPlacer {
 	
 	public void placeEnemyShips() {
 	
-	var random = new Random();
-	
-	placeDestroyerRandomly(random);
-	placeCruiserRandomly(random);
-	placeSubmarineRandomly(random);
-}
+		var random = new Random();
+		
+		placeDestroyerRandomly(random);
+		placeCruiserRandomly(random);
+		placeSubmarineRandomly(random);
+	}
 
 	private void placeSubmarineRandomly(Random random) {
 		var rowS = random.nextInt(8) + 1;
 		var colS = random.nextInt(8) + 1;
 		var subPosition = random.nextInt(2) + 1;
 		
-		while (!validSubmarineCoordinates(rowS, colS)) {
+		if (subPosition == 1)
+			placeLeftSubRandomly(random, rowS, colS, subPosition);
+		
+		else 
+			placeRightSubRandomly(random, rowS, colS, subPosition);
+	}
+
+	private void placeRightSubRandomly(Random random, int rowS, int colS, int subPosition) {
+		while(!validRightSubmarineCoordinates(rowS, colS)) {
+			rowS = random.nextInt(8) + 1;
+			colS = random.nextInt(8) + 1;
+		}
+		
+		placeBattleships("Submarine", subPosition, rowS, colS);
+	}
+
+	private void placeLeftSubRandomly(Random random, int rowS, int colS, int subPosition) {
+		while(!validLeftSubmarineCoordinates(rowS, colS)) {
 			rowS = random.nextInt(8) + 1;
 			colS = random.nextInt(8) + 1;
 		}
@@ -41,20 +58,27 @@ public class ShipPlacer {
 		var colC = random.nextInt(8) + 1;
 		var cruiserPosition = random.nextInt(2) + 1;
 		
-		if (cruiserPosition == 1) {
-			while (!validHorizontalCruiserCoordinates(rowC, colC)) {
-				rowC = random.nextInt(10);
-				colC = random.nextInt(8) + 1;
-			}
-			placeBattleships("Cruiser", cruiserPosition, rowC, colC);
+		if (cruiserPosition == 1) 
+			placeHorizontalCruiserRandomly(random, rowC, colC, cruiserPosition);
+		
+		else 
+			placeVerticalCruiserRandomly(random, rowC, colC, cruiserPosition);
+	}
+
+	private void placeVerticalCruiserRandomly(Random random, int rowC, int colC, int cruiserPosition) {
+		while (!validVerticalCruiserCoordinates(rowC, colC)) {
+			rowC = random.nextInt(8) + 1;
+			colC = random.nextInt(10);
 		}
-		else {
-			while (!validVerticalCruiserCoordinates(rowC, colC)) {
-				rowC = random.nextInt(8) + 1;
-				colC = random.nextInt(10);
-			}
-			placeBattleships("Cruiser", cruiserPosition, rowC, colC);
+		placeBattleships("Cruiser", cruiserPosition, rowC, colC);
+	}
+
+	private void placeHorizontalCruiserRandomly(Random random, int rowC, int colC, int cruiserPosition) {
+		while (!validHorizontalCruiserCoordinates(rowC, colC)) {
+			rowC = random.nextInt(10);
+			colC = random.nextInt(8) + 1;
 		}
+		placeBattleships("Cruiser", cruiserPosition, rowC, colC);
 	}
 
 	private void placeDestroyerRandomly(Random random) {
@@ -107,13 +131,7 @@ public class ShipPlacer {
 	
 	private void placeSubmarine(int position, int row, int col) {
 		
-		if (!validSubmarineCoordinates(row, col))
-			return;
-		
-		grid[row][col].setOccupiedBySubmarine(true); // Place the middle cell
-		setNeighborsToNextToShip(row, col);
-		
-		switch(position) { // Place adjoining cells
+		switch(position) {
 		
 			case 1: // Place submarine diagonally left
 				placeSubmarineDiagonallyLeft(row, col);
@@ -161,21 +179,37 @@ public class ShipPlacer {
 		setNeighborsToNextToShip(row, col + 1);
 	}
 
+	private void placeSubmarineDiagonallyLeft(int row, int col) {
+		
+		if (!validLeftSubmarineCoordinates(row, col))
+			return;
+		
+		grid[row + 1][col + 1].setOccupiedBySubmarine(true);
+		setNeighborsToNextToShip(row + 1, col + 1);
+		
+		grid[row][col].setOccupiedBySubmarine(true);
+		setNeighborsToNextToShip(row, col);
+		
+		grid[row - 1][col - 1].setOccupiedBySubmarine(true);
+		setNeighborsToNextToShip(row - 1, col -1);
+	}
+	
 	private void placeSubmarineDiagonallyRight(int row, int col) {
+
+		if (!validRightSubmarineCoordinates(row, col))
+			return;
+		
 		grid[row + 1][col - 1].setOccupiedBySubmarine(true);
 		setNeighborsToNextToShip(row + 1, col - 1);
+		
+		grid[row][col].setOccupiedBySubmarine(true);
+		setNeighborsToNextToShip(row, col);
 		
 		grid[row - 1][col + 1].setOccupiedBySubmarine(true);
 		setNeighborsToNextToShip(row - 1, col + 1);
 	}
 
-	private void placeSubmarineDiagonallyLeft(int row, int col) {
-		grid[row + 1][col + 1].setOccupiedBySubmarine(true);
-		setNeighborsToNextToShip(row + 1, col + 1);
-		
-		grid[row - 1][col - 1].setOccupiedBySubmarine(true);
-		setNeighborsToNextToShip(row - 1, col -1);
-	}
+	
 	
 	private void setNeighborsToNextToShip(int row, int col) {
 		for (int i = -1; i <= 1; i++)
@@ -190,7 +224,7 @@ public class ShipPlacer {
 			}
 	}
 	
-	private boolean validDestroyerCoordinates(int row, int col) {
+	public boolean validDestroyerCoordinates(int row, int col) {
 		for (int i = 0; i <= 1; i++)
 			for (int j = 0; j <= 1; j++)
 				if (!cellIsOnBoard(row + i, col + j) ||
@@ -200,9 +234,7 @@ public class ShipPlacer {
 		return true;
 	}
 	
-	
-	
-	private boolean validSubmarineCoordinates(int row, int col) {
+	public boolean validSubmarineCoordinates(int row, int col) {
 		for (int i = -1; i <= 1; i++)
 			for (int j = -1; j <= 1; j++)
 				if (!cellIsOnBoard(row + i, col + j) ||
@@ -212,7 +244,17 @@ public class ShipPlacer {
 		return true;
 	}
 	
-	private boolean validHorizontalCruiserCoordinates(int row, int col) {
+	public boolean validLeftSubmarineCoordinates(int row, int col) {
+		return validCellCoordinates(row + 1, col + 1) &&
+			   validCellCoordinates(row - 1, col - 1);
+	}
+	
+	public boolean validRightSubmarineCoordinates(int row, int col) {
+		return validCellCoordinates(row + 1, col - 1) &&
+			   validCellCoordinates(row - 1, col + 1);
+	}
+	
+	public boolean validHorizontalCruiserCoordinates(int row, int col) {
 	
 		for (int j = -1; j <= 1; j++) {
 			if (!cellIsOnBoard(row, col + j) ||
@@ -223,7 +265,7 @@ public class ShipPlacer {
 		return true;
 	}
 	
-	private boolean validVerticalCruiserCoordinates(int row, int col) {
+	public boolean validVerticalCruiserCoordinates(int row, int col) {
 		for (int i = -1; i <= 1; i++) {
 			
 			if (!cellIsOnBoard(row + i, col) ||
@@ -232,6 +274,10 @@ public class ShipPlacer {
 			}
 		
 		return true;
+	}
+	
+	private boolean validCellCoordinates(int row, int col) {
+		return cellIsOnBoard(row, col) && !grid[row][col].isNextToShip(); 
 	}
 	
 	public boolean cellIsOnBoard(int row, int col) {
