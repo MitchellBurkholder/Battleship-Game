@@ -193,6 +193,8 @@ public class GameSession {
 		
 		int rowCord = 0;
 		int columnCord = 0;
+		int randRowCord = enemy.shootTarget();
+		int randColumnCord = enemy.shootTarget();
 		
 		System.out.println("Enter the row you want to hit");
 		rowCord = scanner.nextInt();
@@ -215,11 +217,24 @@ public class GameSession {
 			}
 			else {
 				System.out.println("You've have missed. It is now player's two turn");
-				enemy.shootTarget();
+				
+				playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
+				
+				while(playerBoard.getGrid(randRowCord, randColumnCord).isOccupied()){
+					aiScore++;
+					randRowCord = enemy.shootTarget();
+					randColumnCord = enemy.shootTarget();
+					playerBoard.getGrid(randRowCord, randRowCord).setHit(true);
+				}
+				
+				tradingShots();
+			}
+				
 			}
 		}
 	}
 }
+
 
 
 
