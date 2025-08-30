@@ -27,7 +27,6 @@ public class GameSession {
 	private HashSet<Cell> computerShotSet = new HashSet<>();
 	
 	private Board aiBoard = new Board();
-	private AIBattleShip enemy = new AIBattleShip(aiBoard);
 	
 	private ShipPlacer playerPlacer = new ShipPlacer(playerBoard);
 	private ShipPlacer enemyPlacer = new ShipPlacer(computerBoard);
@@ -415,6 +414,7 @@ public class GameSession {
 	}
 
 }
+
 
 
 
