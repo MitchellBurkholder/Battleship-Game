@@ -66,7 +66,9 @@ public class GameSession {
 					playerBoard.printBoard(false);
 					battleshipSetup();
 					enemyPlacer.placeEnemyShips();
-					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE
+					computerBoard.printBoard(true); // CHANGE TO TRUE WHEN DONE
+					tradingShots();
+					inSession = false;
 					break;
 					
 				case 0:
@@ -191,6 +193,14 @@ public class GameSession {
 	
 	private void tradingShots(){
 		
+		if(playerScore == 10){
+			System.out.println("Player one has won the game. Game over");
+			return;
+		} else if(aiScore == 10){
+			System.out.println("Player one has won the game. Game over");
+			return;
+		}
+		
 		int rowCord = 0;
 		int columnCord = 0;
 		int randRowCord = enemy.shootTarget();
@@ -237,6 +247,7 @@ public class GameSession {
 		}
 	}
 }
+
 
 
 
