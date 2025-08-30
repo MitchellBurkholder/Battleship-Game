@@ -1,7 +1,10 @@
 package cst201;
 
+import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class GameSession {
 	
@@ -14,9 +17,14 @@ public class GameSession {
 	// These variables will help with determining who will win.
 	private int playerScore = 0;
 	private int aiScore = 0;
+	private final int WINNING_SCORE = 10;
 	
 	private Board playerBoard = new Board();
+	private Cell[][] playerGrid = playerBoard.getGrid();
+	
 	private Board computerBoard = new Board();
+	private Cell[][] computerGrid = computerBoard.getGrid();
+	private HashSet<Cell> computerShotSet = new HashSet<>();
 	
 	private Board aiBoard = new Board();
 	private AIBattleShip enemy = new AIBattleShip(aiBoard);
@@ -26,7 +34,7 @@ public class GameSession {
 	
 	private Scanner scanner = new Scanner(System.in);
 	
-	public void start() {
+	public void start() throws InterruptedException {
 		
 		printMainMenu();
 		
@@ -45,7 +53,7 @@ public class GameSession {
 						 + "0 - Exit\n");
 	}
 	
-	private void chooseMenuOptions() {
+	private void chooseMenuOptions() throws InterruptedException {
 		
 		boolean inSession = true;
 		
@@ -65,10 +73,14 @@ public class GameSession {
 				case 1:
 					playerBoard.printBoard(false);
 					battleshipSetup();
+					computerShotSet = fillComputerShotSet();
+					System.out.println("\nComputer places ships...");
+					Thread.sleep(2000);
 					enemyPlacer.placeEnemyShips();
 					computerBoard.printBoard(false); // CHANGE TO TRUE WHEN DONE!!!
-					tradingShots();
-					inSession = false;
+					navalCombat();
+					//tradingShots();
+					//inSession = false;
 					break;
 					
 				case 0:
@@ -207,28 +219,6 @@ public class GameSession {
 		System.out.println("\nPlace " + name);
 	}
 	
-	
-	private int enterCol(int col) {
-		
-		while (true) {
-			
-			System.out.print("\nColumn: ");
-			
-			try {
-				col = scanner.nextInt();
-				if (validNum(col))
-					break;
-				else
-					System.out.println("\nColumn must be between 0 and 9");
-			
-			} catch (InputMismatchException e) {
-				System.out.println("Enter a number.\n");
-				scanner.nextLine();
-			}
-		}
-		return col;
-	}
-
 	private int enterRow(int row) {
 		
 		while (true) {
@@ -247,9 +237,32 @@ public class GameSession {
 				scanner.nextLine();
 			}
 		}
+		
 		return row;
 	}
 	
+	private int enterCol(int col) {
+		
+		while (true) {
+			
+			System.out.print("\nColumn: ");
+			
+			try {
+				col = scanner.nextInt();
+				if (validNum(col))
+					break;
+				else
+					System.out.println("\nColumn must be between 0 and 9");
+			
+			} catch (InputMismatchException e) {
+				System.out.println("\nEnter a number.");
+				scanner.nextLine();
+			}
+		}
+		
+		return col;
+	}
+
 	private boolean validNum(int num) {
 		return num >= 0 && num <= 9;
 	}
@@ -271,13 +284,150 @@ public class GameSession {
 						 + "2 - Place cruiser vertically.");
 	}
 	
+	private void navalCombat() throws InterruptedException {
+		
+		while (playerScore < WINNING_SCORE &&
+			   aiScore < WINNING_SCORE) {
+			
+			playerOffense();
+			if (playerScore == WINNING_SCORE) {
+				System.out.println("\nCongratulation! You won.");
+				return;
+			}
+			
+			computerOffense();
+			if (aiScore == WINNING_SCORE) {
+				System.out.println("Computer won. You lost.");
+				return;
+			}
+		}
+	}
+	
+	private void playerOffense() throws InterruptedException {
+		
+		System.out.println("\nMake a shot");
+		
+		boolean playerTurn = true;
+		
+		while (playerTurn) {
+			
+			playerShoots();
+			
+			if (computerGrid[row][col].isOccupied()) {
+				playerScore++;
+				computerBoard.printBoard(false); // CHANGE TO TRUE!!!
+				System.out.println("Your current score is " + playerScore + ".");
+				if (playerScore == WINNING_SCORE) {
+					return;
+				}
+				System.out.println("\nMake another shot.");
+			}
+			
+			else {
+				System.out.println("\nYou have missed.");
+				playerBoard.printBoard(false);
+				playerTurn = false;
+				return;
+			}
+		}
+	}
+
+	private void playerShoots() {
+		
+		while (true) {
+			
+			enterCoordinates();
+			
+			var targetCell = computerGrid[row][col];
+			
+			if (targetCell.isHit())
+				System.out.println("\nThis field has been already shot. Try again.");
+			
+			else {
+				targetCell.setHit(true);
+				break;
+			}
+			
+		}
+	}
+	
+	private void computerOffense() throws InterruptedException {
+		
+		System.out.println("\nComputer's turn...");
+		Thread.sleep(2000);
+		computerShoots();
+	}
+
+	private void computerShoots() throws InterruptedException {
+		
+		var computerTurn = true;
+		while (computerTurn) {
+			computerTurn = computerShotOutcome(computerTurn);				
+		}
+	}
+
+	private boolean computerShotOutcome(boolean computerTurn) throws InterruptedException {
+		var targetCell = randomShot();
+		targetCell.setHit(true);
+		
+		if (targetCell.isOccupied()) {
+			aiScore++;
+			playerBoard.printBoard(false);
+			System.out.println("\nComputer has hit one of your ships.\n"
+							 + "Computer score is " + aiScore + ".");
+			if (aiScore == WINNING_SCORE)
+				return false;
+			
+			System.out.println("\nComputer shoots again...");
+			Thread.sleep(2000);
+		}
+		else {
+			playerBoard.printBoard(false);
+			computerBoard.printBoard(false); // CHANGE TO TRUE!!!
+			System.out.println("\nComputer missed. Your turn.");
+			computerTurn = false;
+		}
+		return computerTurn;
+	}
+
+	private Cell randomShot() {
+//		var random = new Random();
+//		var randRow = random.nextInt(10);
+//		var randCol = random.nextInt(10);
+		
+		var shot = computerShotSet.iterator().next();
+		computerShotSet.remove(shot);
+		
+		var targetCell = playerGrid[shot.getRow()][shot.getCol()];
+		
+//		while(targetCell.isHit()) {
+//			randRow = random.nextInt(10);
+//			randCol = random.nextInt(10);
+//		}
+		
+		return targetCell;
+	}
+	
+	private HashSet<Cell> fillComputerShotSet() {
+		
+		var random = new Random();
+		
+		while (computerShotSet.size() < 100) {
+			int row = random.nextInt(10);
+			int col = random.nextInt(10);
+			computerShotSet.add(computerGrid[row][col]);
+		}
+		
+		return computerShotSet;
+	}
+	
 	private void tradingShots(){
 		
 		if(playerScore == 10){
 			System.out.println("Player one has won the game. Game over");
 			return;
 		} else if(aiScore == 10){
-			System.out.println("Player one has won the game. Game over");
+			System.out.println("Computer has won the game. Game over");
 			return;
 		}
 		

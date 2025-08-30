@@ -28,11 +28,19 @@ public class ShipPlacer {
 		var colS = random.nextInt(8) + 1;
 		var subPosition = random.nextInt(2) + 1;
 		
-		if (subPosition == 1)
-			placeLeftSubRandomly(random, rowS, colS, subPosition);
-		
-		else 
-			placeRightSubRandomly(random, rowS, colS, subPosition);
+		switch(subPosition) {
+			case 1:
+				placeLeftSubRandomly(random, rowS, colS, subPosition);
+				break;
+				
+			case 2:
+				placeRightSubRandomly(random, rowS, colS, subPosition);
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Invalid submarine position");
+		}
+			
 	}
 
 	private void placeRightSubRandomly(Random random, int rowS, int colS, int subPosition) {
@@ -58,11 +66,20 @@ public class ShipPlacer {
 		var colC = random.nextInt(8) + 1;
 		var cruiserPosition = random.nextInt(2) + 1;
 		
-		if (cruiserPosition == 1) 
-			placeHorizontalCruiserRandomly(random, rowC, colC, cruiserPosition);
+		switch(cruiserPosition) {
 		
-		else 
-			placeVerticalCruiserRandomly(random, rowC, colC, cruiserPosition);
+			case 1:
+				placeHorizontalCruiserRandomly(random, rowC, colC, cruiserPosition);
+				break;
+				
+			case 2:
+				placeVerticalCruiserRandomly(random, rowC, colC, cruiserPosition);
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Invalid cruiser position.");
+		} 
+		
 	}
 
 	private void placeVerticalCruiserRandomly(Random random, int rowC, int colC, int cruiserPosition) {
@@ -234,23 +251,25 @@ public class ShipPlacer {
 		return true;
 	}
 	
-	public boolean validSubmarineCoordinates(int row, int col) {
-		for (int i = -1; i <= 1; i++)
-			for (int j = -1; j <= 1; j++)
-				if (!cellIsOnBoard(row + i, col + j) ||
-					grid[row + i][col + j].isNextToShip())
-					return false;
-		
-		return true;
-	}
+//	public boolean validSubmarineCoordinates(int row, int col) {
+//		for (int i = -1; i <= 1; i++)
+//			for (int j = -1; j <= 1; j++)
+//				if (!cellIsOnBoard(row + i, col + j) ||
+//					grid[row + i][col + j].isNextToShip())
+//					return false;
+//		
+//		return true;
+//	}
 	
 	public boolean validLeftSubmarineCoordinates(int row, int col) {
 		return validCellCoordinates(row + 1, col + 1) &&
+			   validCellCoordinates(row, col) &&
 			   validCellCoordinates(row - 1, col - 1);
 	}
 	
 	public boolean validRightSubmarineCoordinates(int row, int col) {
 		return validCellCoordinates(row + 1, col - 1) &&
+			   validCellCoordinates(row, col) &&
 			   validCellCoordinates(row - 1, col + 1);
 	}
 	
@@ -277,7 +296,9 @@ public class ShipPlacer {
 	}
 	
 	private boolean validCellCoordinates(int row, int col) {
-		return cellIsOnBoard(row, col) && !grid[row][col].isNextToShip(); 
+		return cellIsOnBoard(row, col) && 
+			   !grid[row][col].isNextToShip() &&
+			   !grid[row][col].isOccupied();
 	}
 	
 	public boolean cellIsOnBoard(int row, int col) {

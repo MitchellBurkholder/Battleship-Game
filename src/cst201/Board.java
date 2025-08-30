@@ -63,7 +63,7 @@ public class Board {
 		var cell = grid[row][col];
 		
 		if(isAIBoard){
-		if (cell.isHit() && !(cell.isOccupied()))
+		if (cell.isHit() && !cell.isOccupied())
 			printCustomCell("M");
 		else if (cell.isHit() && cell.isOccupied())
 			printCustomCell("H");
@@ -72,18 +72,18 @@ public class Board {
 		return;
 		}
 		
-		if (cell.isOccupiedByDestroyer())
+		if (cell.isHit() && !cell.isOccupied())
+			printCustomCell("M");
+		else if (cell.isHit() && cell.isOccupied())
+			printCustomCell("H");
+		else if (cell.isOccupiedByDestroyer())
 			printCustomCell("D");
 		else if (cell.isOccupiedBySubmarine())
 			printCustomCell("S");
 		else if (cell.isOccupiedByCruiser())
 			printCustomCell("C");
-		else if (cell.isNextToShip())
-			printCustomCell("*");
-		else if (cell.isHit() && !(cell.isOccupied()))
-			printCustomCell("M");
-		else if (cell.isHit() && cell.isOccupied())
-			printCustomCell("H");
+//		else if (cell.isNextToShip()) // DELETE!!!
+//			printCustomCell("*");
 		else 
 			printCustomCell(" ");
 	}
